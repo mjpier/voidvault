@@ -1721,9 +1721,11 @@ multi sub replace(
     --> Nil
 )
 {
+    my Str:D $vault-uuid =
+        qqx<blkid --match-tag UUID --output value $partition-vault>.trim;
     my Str:D $file = '/mnt/etc/crypttab';
     my Str:D $key = qq:to/EOF/;
-    $vault-name   $partition-vault   /boot/volume.key   luks
+    $vault-name   UUID=$vault-uuid   /boot/volume.key   luks
     EOF
     spurt($file, "\n" ~ $key, :append);
 }
